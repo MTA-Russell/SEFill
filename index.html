@@ -477,7 +477,7 @@ var BASE = [
   {k:'assetNo',         label:'Asset number',                 t:'text'},
   {k:'hours',           label:'Hours',                        t:'number'},
   {k:'mileage',         label:'Mileage',                      t:'number'},
-  {k:'serviceOrderNo',  label:'Service order number',         t:'text'},
+  {k:'serviceOrderNo',  label:'Service order (SE) number',    t:'text'},
   {k:'nextServiceDue',  label:'Next service due',             t:'text', help:'Leave blank if there is no next service scheduled.'},
   {k:'seNeeded',        label:'SE needed?',                   t:'yn'},
   {k:'seCompleted',     label:'SE completed?',                t:'yn'},
@@ -614,7 +614,7 @@ function summaryHtml(){
     ['Asset No',          answers.assetNo],
     ['Hours',             answers.hours],
     ['Mileage',           answers.mileage],
-    ['Service Order #',   answers.serviceOrderNo],
+    ['Service Order (SE) #', answers.serviceOrderNo],
     ['Next Service Due',  answers.nextServiceDue],
     ['SE Needed',         answers.seNeeded],
     ['SE Completed',      answers.seCompleted],
@@ -807,7 +807,7 @@ function finish(){
     'Asset No: ' + (answers.assetNo||''),
     'Hours: ' + (answers.hours||''),
     'Mileage: ' + (answers.mileage||''),
-    'Service Order #: ' + (answers.serviceOrderNo||''),
+    'Service Order (SE) #: ' + (answers.serviceOrderNo||''),
     'Next Service Due: ' + (answers.nextServiceDue||''),
     'SE Needed: ' + (answers.seNeeded||''),
     'SE Completed: ' + (answers.seCompleted||''),
@@ -830,7 +830,7 @@ function finish(){
     'Filled worksheet PDF is attached. Photos of the repair should be attached before sending.'
   ].join('\n');
 
-  emailSubject = 'SO ' + (answers.serviceOrderNo||'') + ' - Asset ' + (answers.assetNo||'');
+  emailSubject = 'SE ' + (answers.serviceOrderNo||'') + ' - Asset ' + (answers.assetNo||'');
   // Phone mail apps use the attachment filename as the subject, so it matches exactly
   pdfFileName = emailSubject.replace(/[\\/:*?"<>|]/g,'-') + '.pdf';
 
@@ -1023,9 +1023,11 @@ function downloadBlob(blob, name){
 
 function doShare(){
   var file = new File([pdfBlob()], pdfFileName, {type:'application/pdf'});
+  // Phone mail apps take the first line of the shared text as the subject,
+  // so the subject has to lead. The addresses follow right underneath it.
   navigator.share({
     title: emailSubject,
-    text: emailBody,
+    text: emailSubject + '\n\n' + emailBody,
     files: [file]
   }).catch(function(){});
 }
