@@ -159,8 +159,9 @@
     {k:'project', label:'Project', t:'text'},
     {k:'date', label:'Date', t:'date', today:true},
     {k:'assetNo', label:'Asset number', t:'text'},
-    {k:'hours', label:'Hours', t:'number'},
-    {k:'mileage', label:'Mileage', t:'number'},
+    {k:'hours', label:'Hours', t:'text'},
+    {k:'hoursNextServiceDue', label:'Hours next service due', t:'text'},
+    {k:'mileage', label:'Mileage', t:'text'},
     {k:'serviceOrderNo', label:'Service order (SE) number', t:'text'},
     {k:'nextServiceDue', label:'Next service due', t:'text', help:'Leave blank if there is no next service scheduled.'},
     {k:'seNeeded', label:'SE needed?', t:'yn'},
@@ -204,7 +205,7 @@
     nextBtn.textContent = 'Next';
     updateChrome();
 
-    if (step.t === 'text' || step.t === 'number' || step.t === 'date') {
+    if (step.t === 'text' || step.t === 'date') {
       var value = answers[step.k];
       if (value == null && step.today) value = today();
       bodyEl.innerHTML = '<div class="q-label">' + esc(step.label) + '</div>'
@@ -242,7 +243,7 @@
       return;
     }
     var labels = {desc:'Part description', partNo:'Part number', qty:'Quantity'};
-    var type = partStage === 'qty' ? 'number' : 'text';
+    var type = 'text';
     bodyEl.innerHTML = summary + '<div class="q-label">Part ' + (parts.length + 1) + ': ' + labels[partStage] + '</div>'
       + '<input type="' + type + '" id="partInput" value="' + esc(draft[partStage]) + '">';
   }
@@ -251,6 +252,7 @@
     var rows = [
       ['Technician', answers.techName], ['Division', answers.division], ['Project', answers.project],
       ['Date', answers.date], ['Asset No', answers.assetNo], ['Hours', answers.hours],
+      ['Hours next service due', answers.hoursNextServiceDue],
       ['Mileage', answers.mileage], ['Service Order (SE) #', answers.serviceOrderNo],
       ['Next Service Due', answers.nextServiceDue], ['SE Needed', answers.seNeeded],
       ['SE Completed', answers.seCompleted], ['Complaint', answers.complaint],
@@ -318,6 +320,7 @@
       'Date: ' + (answers.date || ''),
       'Asset No: ' + (answers.assetNo || ''),
       'Hours: ' + (answers.hours || ''),
+      'Hours next service due: ' + (answers.hoursNextServiceDue || ''),
       'Mileage: ' + (answers.mileage || ''),
       'Service Order (SE) #: ' + (answers.serviceOrderNo || ''),
       'Next Service Due: ' + (answers.nextServiceDue || ''),
